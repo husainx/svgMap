@@ -84,11 +84,12 @@ function svgMapWrapper(svgPanZoom) {
       // Country specific options
       countries: {
         // Western Sahara: Set to false to combine Morocco (MA) and Western Sahara (EH)
-        EH: true
+        EH: true,
+        IL: true
       },
 
       // Set to true to show a drop down menu with the continents
-      showContinentSelector: false,
+      showContinentSelector: false
     };
 
     this.options = Object.assign({}, defaultOptions, options || {});
@@ -442,7 +443,7 @@ function svgMapWrapper(svgPanZoom) {
     );
   };
 
-  svgMap.prototype.calculateColorRatio = function (value, min, max, ratioType)  {
+  svgMap.prototype.calculateColorRatio = function (value, min, max, ratioType) {
     var range = max - min;
     var positionInRange = value - min;
 
@@ -454,7 +455,10 @@ function svgMapWrapper(svgPanZoom) {
       var logValue = Math.log(positionInRange + 1);
       var logMin = Math.log(1);
       var logMax = Math.log(range + 1);
-      var ratio = Math.max(0, Math.min(1, (logValue - logMin) / (logMax - logMin)));
+      var ratio = Math.max(
+        0,
+        Math.min(1, (logValue - logMin) / (logMax - logMin))
+      );
       return ratio || ratio === 0 ? ratio : 1;
     }
 
@@ -468,7 +472,7 @@ function svgMapWrapper(svgPanZoom) {
     }
 
     return 1;
-  }
+  };
 
   // Emoji flags
 
@@ -721,68 +725,75 @@ function svgMapWrapper(svgPanZoom) {
   };
 
   svgMap.prototype.continents = {
-    "EA": {
-      "iso": "EA",
-      "name": "World"
+    EA: {
+      iso: 'EA',
+      name: 'World'
     },
-    "AF": {
-      "iso": "AF",
-      "name": "Africa",
-      "pan": {
-        x: 454, y: 250
+    AF: {
+      iso: 'AF',
+      name: 'Africa',
+      pan: {
+        x: 454,
+        y: 250
       },
-      "zoom": 1.90
+      zoom: 1.9
     },
-    "AS": {
-      "iso": "AS",
-      "name": "Asia",
-      "pan": {
-        x: 904, y: 80
+    AS: {
+      iso: 'AS',
+      name: 'Asia',
+      pan: {
+        x: 904,
+        y: 80
       },
-      "zoom": 1.8
+      zoom: 1.8
     },
-    "EU": {
-      "iso": "EU",
-      "name": "Europe",
-      "pan": {
-        x: 404, y: 80
+    EU: {
+      iso: 'EU',
+      name: 'Europe',
+      pan: {
+        x: 404,
+        y: 80
       },
-      "zoom": 5
+      zoom: 5
     },
-    "NA": {
-      "iso": "NA",
-      "name": "North America",
-      "pan": {
-        x: 104, y: 55
+    NA: {
+      iso: 'NA',
+      name: 'North America',
+      pan: {
+        x: 104,
+        y: 55
       },
-      "zoom": 2.6
+      zoom: 2.6
     },
 
-    "MA": {
-      "iso": "MA",
-      "name": "Middle America",
-      "pan": {
-        x: 104, y: 200
+    MA: {
+      iso: 'MA',
+      name: 'Middle America',
+      pan: {
+        x: 104,
+        y: 200
       },
-      "zoom": 2.6
+      zoom: 2.6
     },
-    "SA": {
-      "iso": "SA",
-      "name": "South America",
-      "pan": {
-        x: 104, y: 340
+    SA: {
+      iso: 'SA',
+      name: 'South America',
+      pan: {
+        x: 104,
+        y: 340
       },
-      "zoom": 2.2
+      zoom: 2.2
     },
-    "OC": {
-      "iso": "OC",
-      "name": "Oceania",
-      "pan": {
-        x: 954, y: 350
+    OC: {
+      iso: 'OC',
+      name: 'Oceania',
+      pan: {
+        x: 954,
+        y: 350
       },
-      "zoom": 1.90
-    },
-  }
+      zoom: 1.9
+    }
+  };
   // Create the SVG map
 
   svgMap.prototype.createMap = function () {
@@ -803,7 +814,6 @@ function svgMapWrapper(svgPanZoom) {
     this.mapImage.classList.add('svgMap-map-image');
     this.mapWrapper.appendChild(this.mapImage);
 
-
     // Add controls
     var mapControlsWrapper = this.createElement(
       'div',
@@ -817,20 +827,23 @@ function svgMapWrapper(svgPanZoom) {
     );
     ['in', 'out', 'reset'].forEach(
       function (item) {
-        if (item === 'reset' && this.options.showZoomReset || item !== 'reset') {
+        if (
+          (item === 'reset' && this.options.showZoomReset) ||
+          item !== 'reset'
+        ) {
           var zoomControlName =
             'zoomControl' + item.charAt(0).toUpperCase() + item.slice(1);
           this[zoomControlName] = this.createElement(
             'button',
             'svgMap-control-button svgMap-zoom-button svgMap-zoom-' +
-            item +
-            '-button',
+              item +
+              '-button',
             zoomContainer
           );
           this[zoomControlName].type = 'button';
           this[zoomControlName].addEventListener(
             'click',
-            function() {
+            function () {
               if (this.options.allowInteraction) {
                 this.zoomMap(item);
               }
@@ -857,23 +870,22 @@ function svgMapWrapper(svgPanZoom) {
         'svgMap-map-continent-controls-wrapper',
         this.mapWrapper
       );
-      this["continentSelect"] = this.createElement(
+      this['continentSelect'] = this.createElement(
         'select',
         'svgMap-continent-select',
         mapContinentControlsWrapper
       );
       var that = this;
-      Object.keys(svgMap.prototype.continents).forEach(
-        function (item) {
-          let element = that.createElement(
-            'option',
-            'svgMap-continent-option svgMap-continent-iso-' + svgMap.prototype.continents[item].iso,
-            that["continentSelect"],
-            svgMap.prototype.continents[item].name
-          );
-          element.value = item
-        }
-      );
+      Object.keys(svgMap.prototype.continents).forEach(function (item) {
+        let element = that.createElement(
+          'option',
+          'svgMap-continent-option svgMap-continent-iso-' +
+            svgMap.prototype.continents[item].iso,
+          that['continentSelect'],
+          svgMap.prototype.continents[item].name
+        );
+        element.value = item;
+      });
 
       this.continentSelect.addEventListener(
         'change',
@@ -883,7 +895,10 @@ function svgMapWrapper(svgPanZoom) {
         }.bind(that),
         { passive: true }
       );
-      mapContinentControlsWrapper.setAttribute('aria-label', 'Select continent');
+      mapContinentControlsWrapper.setAttribute(
+        'aria-label',
+        'Select continent'
+      );
     }
     // Fix countries
     var mapPaths = Object.assign({}, this.mapPaths);
@@ -893,6 +908,12 @@ function svgMapWrapper(svgPanZoom) {
       delete mapPaths.EH;
     }
     delete mapPaths['MA-EH'];
+
+    if (!this.options.countries.IL) {
+      mapPaths.MA.d = mapPaths['PS-IL'].d;
+      delete mapPaths.IL;
+    }
+    delete mapPaths['PS-IL'];
 
     // Expose tooltipMove function
 
@@ -989,10 +1010,18 @@ function svgMapWrapper(svgPanZoom) {
           }
 
           let dragged = false;
-          countryElement.addEventListener('mousedown', function () { dragged = false });
-          countryElement.addEventListener('touchstart', function () { dragged = false });
-          countryElement.addEventListener('mousemove', function () { dragged = true });
-          countryElement.addEventListener('touchmove', function () { dragged = true });
+          countryElement.addEventListener('mousedown', function () {
+            dragged = false;
+          });
+          countryElement.addEventListener('touchstart', function () {
+            dragged = false;
+          });
+          countryElement.addEventListener('mousemove', function () {
+            dragged = true;
+          });
+          countryElement.addEventListener('touchmove', function () {
+            dragged = true;
+          });
           const clickHandler = function (e) {
             if (dragged) {
               return;
@@ -1006,7 +1035,7 @@ function svgMapWrapper(svgPanZoom) {
             } else {
               window.location.href = link;
             }
-          }
+          };
 
           countryElement.addEventListener('click', clickHandler);
           countryElement.addEventListener('touchend', clickHandler);
@@ -1058,8 +1087,12 @@ function svgMapWrapper(svgPanZoom) {
       maxZoom: this.options.maxZoom,
       zoomScaleSensitivity: this.options.zoomScaleSensitivity,
       controlIconsEnabled: false,
-      dblClickZoomEnabled: this.options.allowInteraction ? this.options.dblClickZoomEnabled : false,
-      mouseWheelZoomEnabled: this.options.allowInteraction ? this.options.mouseWheelZoomEnabled : false,
+      dblClickZoomEnabled: this.options.allowInteraction
+        ? this.options.dblClickZoomEnabled
+        : false,
+      mouseWheelZoomEnabled: this.options.allowInteraction
+        ? this.options.mouseWheelZoomEnabled
+        : false,
       preventMouseEventsDefault: true,
       onZoom: function () {
         me.setControlStatuses();
@@ -1126,7 +1159,7 @@ function svgMapWrapper(svgPanZoom) {
       var flagContainer = this.createElement(
         'div',
         'svgMap-tooltip-flag-container svgMap-tooltip-flag-container-' +
-        this.options.flagType,
+          this.options.flagType,
         tooltipContentWrapper
       );
 
@@ -1169,7 +1202,10 @@ function svgMapWrapper(svgPanZoom) {
         function (key) {
           var item = this.options.data.data[key];
           var value = this.options.data.values[countryID][key];
-          if ((value !== undefined && this.options.hideMissingData === true) || this.options.hideMissingData === false) {
+          if (
+            (value !== undefined && this.options.hideMissingData === true) ||
+            this.options.hideMissingData === false
+          ) {
             item.floatingNumbers && (value = value.toFixed(1));
             item.thousandSeparator &&
               (value = this.numberWithCommas(value, item.thousandSeparator));
@@ -1177,7 +1213,11 @@ function svgMapWrapper(svgPanZoom) {
               ? item.format.replace('{0}', '<span>' + value + '</span>')
               : '<span>' + value + '</span>';
             tooltipContentTable +=
-              '<tr><td>' + (item.name || '') + '</td><td>' + value + '</td></tr>';
+              '<tr><td>' +
+              (item.name || '') +
+              '</td><td>' +
+              value +
+              '</td></tr>';
           }
         }.bind(this)
       );
@@ -1207,7 +1247,10 @@ function svgMapWrapper(svgPanZoom) {
       this.zoomControlIn.classList.add('svgMap-disabled');
       this.zoomControlIn.setAttribute('aria-disabled', 'true');
     }
-    if (this.options.showZoomReset && this.mapPanZoom.getZoom().toFixed(3) == this.options.initialZoom) {
+    if (
+      this.options.showZoomReset &&
+      this.mapPanZoom.getZoom().toFixed(3) == this.options.initialZoom
+    ) {
       this.zoomControlReset.classList.add('svgMap-disabled');
       this.zoomControlReset.setAttribute('aria-disabled', 'true');
     }
@@ -1243,11 +1286,10 @@ function svgMapWrapper(svgPanZoom) {
   // Zoom to Contient
 
   svgMap.prototype.zoomContinent = function (contientIso) {
-
     const continent = this.continents[contientIso];
-    if (continent.iso == "EA") this.mapPanZoom.reset()
+    if (continent.iso == 'EA') this.mapPanZoom.reset();
     else if (continent.pan) {
-      this.mapPanZoom.reset()
+      this.mapPanZoom.reset();
       this.mapPanZoom.zoomAtPoint(continent.zoom, continent.pan);
     }
   };
@@ -2022,6 +2064,9 @@ function svgMapWrapper(svgPanZoom) {
     },
     'MA-EH': {
       d: 'M969.3,363.1l-1.8-6.7l-0.3-3.9l-2-4.1l-2.3-0.1l-5.5-1.4l-5,0.4l-3.1-2.7h-3.9l-1.8,3.9l-3.7,6.7l-4,2.6 l-5.4,2.9L927,365l-0.9,3.4l-2.1,5.4l1.1,7.9l-4.7,5.3l-2.7,1.7l-4.4,4.4l-5.1,0.7l-2.8,2.4l-0.1,0.1l-3.6,6.5l-3.7,2.3l-2.1,4 l-0.2,3.3l-1.6,3.8l-1.9,1l-3.1,4l-2,4.5l0.3,2.2l-1.9,3.3l-2.2,1.7l-0.3,3l-0.3,2.7l1.2-2.2l21.6,0.1l-0.9-9.2l1.4-3.3l5.2-0.5 l0.2-16.3l17.9,0.3l0.2-9.7l0.1-1.2v-0.4l0,0l0,0l0,0l0.1-7.5l8.9-4.7l5.4-1l4.4-1.7l2.1-3.2l6.3-2.5l0.3-4.7l3.1-0.5l2.5-2.4l7-1 l1-2.5L969.3,363.1z'
+    },
+    'PS-IL': {
+      d: 'M1167.5,364.1l0.6-1l-0.3-2.6l-1.4,0.1l-0.4,1.1h-1.8l-0.1,0.1l-0.6,1.6l-0.6,4.8l-1.1,2.9l0.4,0.4l-1.4,2.1l3.9,9.2l0.7,1.7l1.7-10.2l-0.4-2.4l0,0l0.6-1.9l-0.4-3.9l0,0l0.7-2H1167.5z'
     }
   };
 
@@ -2158,15 +2203,15 @@ function svgMapWrapper(svgPanZoom) {
     ratio = parseFloat(ratio).toFixed(1);
     var r = Math.ceil(
       parseInt(color1.substring(0, 2), 16) * ratio +
-      parseInt(color2.substring(0, 2), 16) * (1 - ratio)
+        parseInt(color2.substring(0, 2), 16) * (1 - ratio)
     );
     var g = Math.ceil(
       parseInt(color1.substring(2, 4), 16) * ratio +
-      parseInt(color2.substring(2, 4), 16) * (1 - ratio)
+        parseInt(color2.substring(2, 4), 16) * (1 - ratio)
     );
     var b = Math.ceil(
       parseInt(color1.substring(4, 6), 16) * ratio +
-      parseInt(color2.substring(4, 6), 16) * (1 - ratio)
+        parseInt(color2.substring(4, 6), 16) * (1 - ratio)
     );
     return '#' + this.getHex(r) + this.getHex(g) + this.getHex(b);
   };
@@ -2178,8 +2223,10 @@ function svgMapWrapper(svgPanZoom) {
    * @param element
    * @returns {string}
    */
-  svgMap.prototype.toHex = function (color, element = document.documentElement) {
-
+  svgMap.prototype.toHex = function (
+    color,
+    element = document.documentElement
+  ) {
     // Resolve CSS variables
     if (color.startsWith('var(')) {
       const cssVar = color.slice(4, -1).trim().replaceAll(/["']+/g, '');
@@ -2194,9 +2241,8 @@ function svgMapWrapper(svgPanZoom) {
     ctx.fillStyle = color;
 
     // computed color is full hex code in the case of one color only
-    return ctx.fillStyle
-  }
-
+    return ctx.fillStyle;
+  };
 
   // Get a hex value
 
