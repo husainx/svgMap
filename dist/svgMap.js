@@ -910,7 +910,8 @@ function svgMapWrapper(svgPanZoom) {
     delete mapPaths['MA-EH'];
 
     if (!this.options.countries.IL) {
-      mapPaths.MA.d = mapPaths['PS-IL'].d;
+      mapPaths.PS.d = mapPaths['PS-IL'].d;
+
       delete mapPaths.IL;
     }
     delete mapPaths['PS-IL'];
